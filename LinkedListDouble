@@ -1,0 +1,102 @@
+#include<iostream>
+
+class Node
+{
+private:
+	int _data;
+public:
+	Node* next = nullptr;
+	Node* previous = nullptr;
+
+	Node(int data) : _data(data){}
+
+	Node() : _data(0) {}
+
+	~Node() { std::cout << "Node deleted" << '\n'; }
+
+	void ShowData()
+	{
+		std::cout << "Data: " << _data << '\n';
+	}
+};
+
+class LinkedList
+{
+private:
+
+	Node* _head = nullptr;
+	Node* _tail = nullptr;
+	int _numberOfElements = 0;
+
+public:
+
+	void AddNode(int data)
+	{
+		if (_head == nullptr)
+		{
+			AddHead(data);
+			return;
+		}
+
+		Node* node = new Node(data);
+
+		_tail->previous = node;
+		node->next = _tail;
+		_tail = node;
+
+		_numberOfElements++;
+	}
+
+	void AddHead(int data)
+	{
+		Node* node = new Node(data);
+
+		if (_head == nullptr)
+		{
+			_head = node;
+			_tail = node;
+			return;
+		}
+
+		_head->next = node;
+		node->previous = _head;
+		_head = node;
+		_numberOfElements++;
+	}
+
+	void ShowLinkedListFromTail()
+	{
+		for (Node *node = _tail; node != _head->next; node = node->next)
+			node->ShowData();
+	}
+
+	void ShowLinkedListFromHead()
+	{
+		for (Node *node = _head; node != _tail->previous; node = node->previous)
+			node->ShowData();
+	}
+
+	void DeleteAllElements()
+	{
+		for (Node* node = _tail; node != _head; NULL)
+		{
+			node = node->next;
+			delete(node->previous);
+			_numberOfElements--;
+		}
+	}
+};
+
+int main()
+{
+	LinkedList* linkedList1 = new LinkedList();
+
+	linkedList1->AddNode(5);
+	linkedList1->AddNode(19);
+	linkedList1->AddNode(20);
+	linkedList1->AddHead(50);
+	linkedList1->ShowLinkedListFromTail();
+	linkedList1->ShowLinkedListFromHead();
+	linkedList1->DeleteAllElements();
+	delete(linkedList1);
+}
